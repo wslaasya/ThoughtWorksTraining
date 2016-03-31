@@ -24,4 +24,6 @@ public class Flight {
     public String getNumber() {
         return number;
     }
+
+    public Plane getPlane() { return plane; }
 }

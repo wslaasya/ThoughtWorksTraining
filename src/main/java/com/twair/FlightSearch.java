@@ -28,16 +28,16 @@ public class FlightSearch {
         return new FlightSearch(matchingFlights);
     }
 
-    public FlightSearch byAvailability(String source, String dstination , int numberOfSeats) {
+    public FlightSearch byAvailability(String source, String destination , int numberOfSeats) {
         if(numberOfSeats == 0) {
             numberOfSeats = 1;
         }
 
-        List<Flight> flightLists = byLocation(source , dstination).getFlightList();
+        List<Flight> flightLists = byLocation(source , destination).getFlightList();
 
         List<Flight> matchingFlights = new ArrayList<Flight>();
         for(Flight flight : flightLists) {
-            if(Integer.parseInt(flight.getNumber()) >= numberOfSeats) {
+            if(flight.getPlane().getNumberOfSeats() >= numberOfSeats) {
                 matchingFlights.add(flight);
             }
         }

@@ -56,9 +56,52 @@ public class FlightSearchTests {
         allFlights.byLocation(source, "");
     }
 
-
     @Test
     public void testNumberOfPassengers() {
-        FlightallFlights.byAvailability(source,destination,5);
+        FlightSearch dearch = allFlights.byAvailability(source,destination,5);
+        List<Flight> flights = dearch.getFlightList();
+        Assert.assertEquals(source, flights.get(0).getSource());
+        Assert.assertEquals(destination, flights.get(0).getDestination());
+        Assert.assertEquals(source, flights.get(1).getSource());
+        Assert.assertEquals(destination, flights.get(1).getDestination());
+        Assert.assertEquals(2, flights.size());
+    }
+
+    @Test
+    public void testNumberOfPassengers_WhenNumberOfSeatsNotSpecified() {
+        FlightSearch dearch = allFlights.byAvailability(source,destination,0);
+        List<Flight> flights = dearch.getFlightList();
+        Assert.assertEquals(source, flights.get(0).getSource());
+        Assert.assertEquals(destination, flights.get(0).getDestination());
+        Assert.assertEquals(source, flights.get(1).getSource());
+        Assert.assertEquals(destination, flights.get(1).getDestination());
+        Assert.assertEquals(2, flights.size());
+    }
+
+    @Test
+    public void testNumberOfPassengers_WhenMoreSeatsThanAvailabilityAreRequested() {
+        FlightSearch dearch = allFlights.byAvailability(source,destination,15);
+        List<Flight> flights = dearch.getFlightList();
+        Assert.assertEquals(0, flights.size());
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldMandateSource_SearchByAvailability() throws Exception {
+        allFlights.byAvailability(null, destination,1);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void sourceCannotBeEmpty_SearchByAvailability() throws Exception {
+        allFlights.byAvailability("", destination,1);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void shouldMandateDestination_SearchByAvailability() throws Exception {
+        allFlights.byAvailability(source, null,1);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void destinationCannotBeEmpty_SearchByAvailability() throws Exception {
+        allFlights.byAvailability(source, "",1);
     }
 }
