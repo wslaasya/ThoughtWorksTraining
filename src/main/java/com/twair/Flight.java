@@ -25,5 +25,5 @@ public class Flight {
         return number;
     }
 
-    public Plane getPlane() { return plane; }
+    public int getNumberOfSeatsInPlane() { return plane.getNumberOfSeats(); }
 }

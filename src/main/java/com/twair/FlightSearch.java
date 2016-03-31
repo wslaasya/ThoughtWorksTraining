@@ -37,7 +37,7 @@ public class FlightSearch {
 
         List<Flight> matchingFlights = new ArrayList<Flight>();
         for(Flight flight : flightLists) {
-            if(flight.getPlane().getNumberOfSeats() >= numberOfSeats) {
+            if(flight.getNumberOfSeatsInPlane() >= numberOfSeats) {
                 matchingFlights.add(flight);
             }
         }
