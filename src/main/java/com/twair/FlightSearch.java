@@ -29,6 +29,9 @@ public class FlightSearch {
     }
 
     public FlightSearch byAvailability(String source, String destination , int numberOfSeats) {
+        if(numberOfSeats < 0) {
+            throw new IllegalArgumentException("Availability should be mentioned");
+        }
         if(numberOfSeats == 0) {
             numberOfSeats = 1;
         }

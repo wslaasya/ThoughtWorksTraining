@@ -104,4 +104,9 @@ public class FlightSearchTests {
     public void destinationCannotBeEmpty_SearchByAvailability() throws Exception {
         allFlights.byAvailability(source, "",1);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void availabilityShouldNotBeNegative_SearchByAvailability() throws Exception {
+        allFlights.byAvailability(source, destination,-100);
+    }
 }
