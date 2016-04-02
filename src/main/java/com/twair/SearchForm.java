@@ -1,10 +1,14 @@
 package com.twair;
 
+import java.util.Date;
+
 public class SearchForm {
     private String from;
     private String to;
     private String number;
     private int passengers;
+    private Date departureDate;
+    private String classType;
 
     public String getFrom() {
         return from;
@@ -36,5 +40,21 @@ public class SearchForm {
 
     public void setPassengers(int passengers) {
         this.passengers = passengers;
+    }
+
+    public Date getDepartureDate() {
+        return this.departureDate;
+    }
+
+    public void setDepartureDate(Date departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public String getClassType() {
+        return this.classType;
+    }
+
+    public void setClassType(String classType) {
+        this.classType = classType;
     }
 }

@@ -24,17 +24,45 @@ public class DataSource {
     }
 
     public FlightSearch fetchFlights() throws Exception {
+        Calendar cal = Calendar.getInstance();
+
         List<Flight> flightList = new ArrayList<>();
         List<Plane> planes = fetchPlanes();
         List<String> locations = fetchLocations();
         Flight flight1 = new Flight("F001", locations.get(0), locations.get(1), planes.get(0));
+        cal.set(2016 , 4, 2);
+        flight1.setStartDate(cal.getTime());
+        flight1.setClasTypeInfo("Economy" , 20);
+        flight1.setClasTypeInfo("Business" , 10);
+        flight1.setClasTypeInfo("FirstClass" , 2);
+
         Flight flight2 = new Flight("F002", locations.get(0), locations.get(1), planes.get(1));
+        cal.set(2016,04,02);
+        flight2.setStartDate(cal.getTime());
+        flight2.setClasTypeInfo("Economy" , 20);
+        flight2.setClasTypeInfo("Business" , 10);
+        flight2.setClasTypeInfo("FirstClass" , 2);
+
         Flight flight3 = new Flight("F003", locations.get(0), locations.get(1), planes.get(1));
+        cal.set(2016,04,03);
+        flight3.setStartDate(cal.getTime());
+        flight3.setClasTypeInfo("Economy" , 20);
+        flight3.setClasTypeInfo("Business" , 10);
+        flight3.setClasTypeInfo("FirstClass" , 2);
 
         flightList.add(flight1);
         flightList.add(flight2);
         flightList.add(flight3);
         FlightSearch allFlights = new FlightSearch(flightList);
         return allFlights;
+    }
+
+    public List<String> fetchClassTypes() {
+        List<String> classTypes = new ArrayList<>();
+        classTypes.add("Economy");
+        classTypes.add("FirstClass");
+        classTypes.add("Business");
+
+        return classTypes;
     }
 }

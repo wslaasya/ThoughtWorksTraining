@@ -16,16 +16,21 @@ public class TwAirApplication {
 	@RequestMapping("/")
 	public String home(Model model) {
         model.addAttribute("locations", DataSource.instance().fetchLocations());
+		model.addAttribute("classTypes" , DataSource.instance().fetchClassTypes());
 		return "FlightSearch";
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public String search(@ModelAttribute(value="searchForm") SearchForm searchForm, Model model) throws Exception {
 		model.addAttribute("locations", DataSource.instance().fetchLocations());
+		model.addAttribute("classTypes" , DataSource.instance().fetchClassTypes());
 		try {
-//			FlightSearch matchingFlights = DataSource.instance().fetchFlights().byLocation(searchForm.getFrom(), searchForm.getTo());
-			FlightSearch matchingFlights = DataSource.instance().fetchFlights().byAvailability(searchForm.getFrom(), searchForm.getTo() ,searchForm.getPassengers());
-			model.addAttribute("flights", matchingFlights.getFlightList());
+			FlightSearch matchingFlights = DataSource.instance().fetchFlights().byLocation(searchForm.getFrom(), searchForm.getTo());
+			matchingFlights = matchingFlights.byAvailability(searchForm.getPassengers());
+			matchingFlights = matchingFlights.byDepartureDate(searchForm.getDepartureDate());
+			matchingFlights = matchingFlights.byClassTypeSeatsAvailability(searchForm.getClassType() , searchForm.getPassengers());
+
+				model.addAttribute("flights", matchingFlights.getFlightList());
 		}catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("flights", new ArrayList());

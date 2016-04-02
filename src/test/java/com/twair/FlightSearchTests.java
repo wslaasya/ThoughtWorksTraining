@@ -11,14 +11,19 @@ public class FlightSearchTests {
     private String destination;
     private FlightSearch allFlights;
 
+    private final Date date1 = Calendar.getInstance().getTime();
+
     @Before
     public void setUp() throws Exception {
         source = "TestSource";
         destination = "TestDestination";
         Plane plane1 = new Plane("type1", 10);
         Flight flight1 = new Flight("F001", source, destination, plane1);
+        flight1.setStartDate(date1);
         Flight flight2 = new Flight("F002", "TestSource1", destination, plane1);
+        flight2.setStartDate(date1);
         Flight flight3 = new Flight("F003", source, destination, plane1);
+        flight3.setStartDate(date1);
         List<Flight> flightList = new ArrayList<>();
         flightList.add(flight1);
         flightList.add(flight2);
@@ -29,8 +34,7 @@ public class FlightSearchTests {
     @Test
     public void shouldReturnListOfFlightsForMatchingSourceDestination() throws Exception {
         List<Flight> flights = allFlights.byLocation(source, destination).getFlightList();
-        Assert.assertEquals(source, flights.get(0).getSource());
-        Assert.assertEquals(destination, flights.get(0).getDestination());
+        Assert.assertEquals(source, flights.get(0).getSource());Assert.assertEquals(destination, flights.get(0).getDestination());
         Assert.assertEquals(source, flights.get(1).getSource());
         Assert.assertEquals(destination, flights.get(1).getDestination());
         Assert.assertEquals(2, flights.size());
@@ -58,55 +62,71 @@ public class FlightSearchTests {
 
     @Test
     public void testNumberOfPassengers() {
-        FlightSearch dearch = allFlights.byAvailability(source,destination,5);
+        FlightSearch dearch = allFlights.byAvailability(5);
         List<Flight> flights = dearch.getFlightList();
         Assert.assertEquals(source, flights.get(0).getSource());
         Assert.assertEquals(destination, flights.get(0).getDestination());
-        Assert.assertEquals(source, flights.get(1).getSource());
+        Assert.assertEquals("TestSource1", flights.get(1).getSource());
         Assert.assertEquals(destination, flights.get(1).getDestination());
-        Assert.assertEquals(2, flights.size());
+        Assert.assertEquals(source, flights.get(2).getSource());
+        Assert.assertEquals(destination, flights.get(2).getDestination());
+        Assert.assertEquals(3, flights.size());
     }
 
     @Test
     public void testNumberOfPassengers_WhenNumberOfSeatsNotSpecified() {
-        FlightSearch dearch = allFlights.byAvailability(source,destination,0);
+        FlightSearch dearch = allFlights.byAvailability(0);
         List<Flight> flights = dearch.getFlightList();
         Assert.assertEquals(source, flights.get(0).getSource());
         Assert.assertEquals(destination, flights.get(0).getDestination());
-        Assert.assertEquals(source, flights.get(1).getSource());
+        Assert.assertEquals("TestSource1", flights.get(1).getSource());
         Assert.assertEquals(destination, flights.get(1).getDestination());
-        Assert.assertEquals(2, flights.size());
+        Assert.assertEquals(source, flights.get(2).getSource());
+        Assert.assertEquals(destination, flights.get(2).getDestination());
+        Assert.assertEquals(3, flights.size());
     }
 
     @Test
     public void testNumberOfPassengers_WhenMoreSeatsThanAvailabilityAreRequested() {
-        FlightSearch dearch = allFlights.byAvailability(source,destination,15);
+        FlightSearch dearch = allFlights.byAvailability(15);
         List<Flight> flights = dearch.getFlightList();
         Assert.assertEquals(0, flights.size());
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void shouldMandateSource_SearchByAvailability() throws Exception {
-        allFlights.byAvailability(null, destination,1);
+    @Test(expected = IllegalArgumentException.class)
+    public void availabilityShouldNotBeNegative_SearchByAvailability() throws Exception {
+        allFlights.byAvailability(-100);
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void sourceCannotBeEmpty_SearchByAvailability() throws Exception {
-        allFlights.byAvailability("", destination,1);
+    @Test
+    public void fetchFlightsBasedOnDepartureDate() {
+        List<Flight> flightsList = allFlights.byDepartureDate(date1).getFlightList();
+        Assert.assertEquals(3,flightsList.size());
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void shouldMandateDestination_SearchByAvailability() throws Exception {
-        allFlights.byAvailability(source, null,1);
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void destinationCannotBeEmpty_SearchByAvailability() throws Exception {
-        allFlights.byAvailability(source, "",1);
+    @Test
+    public void nullDepartureDateShouldReturnAllFlights() {
+        List<Flight> flightsList = allFlights.byDepartureDate(null).getFlightList();
+        Assert.assertEquals(3,flightsList.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void availabilityShouldNotBeNegative_SearchByAvailability() throws Exception {
-        allFlights.byAvailability(source, destination,-100);
+    public void classTypeShouldBeSpecified() {
+        String classType = null;
+        int seatsRequired = 10;
+        allFlights.byClassTypeSeatsAvailability(classType , seatsRequired);
+    }
+
+    @Test
+    public void fetchFlightsBasedOnClassTypeSeatsAvailability() {
+        String classTypeName = "Economy";
+        int seatsRequired = 10;
+
+        allFlights.getFlightList().get(0).setClasTypeInfo("Economy" , 30);
+        allFlights.getFlightList().get(1).setClasTypeInfo("Economy" , 3);
+        allFlights.getFlightList().get(2).setClasTypeInfo("Economy" , 32);
+
+        List<Flight> flightsList = allFlights.byClassTypeSeatsAvailability(classTypeName , seatsRequired).getFlightList();
+        Assert.assertEquals(2,flightsList.size());
     }
 }

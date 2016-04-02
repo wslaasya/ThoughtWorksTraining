@@ -1,6 +1,7 @@
 package com.twair;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FlightSearch {
@@ -28,19 +29,44 @@ public class FlightSearch {
         return new FlightSearch(matchingFlights);
     }
 
-    public FlightSearch byAvailability(String source, String destination , int numberOfSeats) {
+    public FlightSearch byAvailability(int numberOfSeats) {
         if(numberOfSeats < 0) {
             throw new IllegalArgumentException("Availability should be mentioned");
         }
-        if(numberOfSeats == 0) {
-            numberOfSeats = 1;
-        }
-
-        List<Flight> flightLists = byLocation(source , destination).getFlightList();
 
         List<Flight> matchingFlights = new ArrayList<Flight>();
-        for(Flight flight : flightLists) {
+        for(Flight flight : flightList) {
             if(flight.getNumberOfSeatsInPlane() >= numberOfSeats) {
+                matchingFlights.add(flight);
+            }
+        }
+
+        return new FlightSearch(matchingFlights);
+    }
+
+    public FlightSearch byDepartureDate(Date date) {
+        if(date == null) {
+            return new FlightSearch(flightList);
+        }
+
+        List<Flight> matchingFlights = new ArrayList<Flight>();
+        for(Flight flight : flightList) {
+            if(date.compareTo(flight.getStartDate()) == 0) {
+                matchingFlights.add(flight);
+            }
+        }
+
+        return new FlightSearch(matchingFlights);
+    }
+
+    public FlightSearch byClassTypeSeatsAvailability(String classType, int seatsRequired) {
+        if (classType == null || classType.isEmpty()) {
+            throw new IllegalArgumentException("Class type should be mentioned");
+        }
+
+        List<Flight> matchingFlights = new ArrayList<Flight>();
+        for(Flight flight : flightList) {
+            if(flight.getNumberOfSeatsPerClass(classType) >= seatsRequired) {
                 matchingFlights.add(flight);
             }
         }
