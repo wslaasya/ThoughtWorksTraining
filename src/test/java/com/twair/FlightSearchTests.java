@@ -101,7 +101,7 @@ public class FlightSearchTests {
     @Test
     public void fetchFlightsBasedOnDepartureDate() {
         List<Flight> flightsList = allFlights.byDepartureDate(date1).getFlightList();
-        Assert.assertEquals(3,flightsList.size());
+        Assert.assertEquals(34,flightsList.size());
     }
 
     @Test
